@@ -5,7 +5,7 @@
 Sidecar on Dock
 </p>
 <p align="center">
-<a href="https://github.com/kodexlabs-io/sidecar-on-dock/actions/workflows/ci.yml"><img src="https://github.com/kodexlabs-io/sidecar-on-dock/actions/workflows/ci.yml/badge.svg" alt="CI"></a>&nbsp;<a href="https://github.com/kodexlabs-io/sidecar-on-dock/actions/workflows/release.yml"><img src="https://github.com/kodexlabs-io/sidecar-on-dock/actions/workflows/release.yml/badge.svg?branch=main" alt="Create Release"></a>
+<a href="https://github.com/kodexlabs-io/sidecar-on-dock/actions/workflows/ci.yml"><img src="https://github.com/kodexlabs-io/sidecar-on-dock/actions/workflows/ci.yml/badge.svg" alt="CI"></a>&nbsp;<a href="https://github.com/kodexlabs-io/sidecar-on-dock/actions/workflows/release.yml"><img src="https://github.com/kodexlabs-io/sidecar-on-dock/actions/workflows/release.yml/badge.svg" alt="Create Release"></a>
 </p>
 
 A lightweight daemon that monitors a Thunderbolt dock (specified by a unique hardware identifier in a JSON configuration file) and automatically manages display extension. When the dock is connected, your display will extend to an iPad via Sidecar; when disconnected, the extension is removed.
