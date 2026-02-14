@@ -31,8 +31,8 @@ Create `~/.config/sidecar-on-dock/config.json`:
 
 ```json
 {
-  "dock_uid": "0x003DA86E85A8CB00",
-  "ipad_name": "Dominic's iPad"
+  "dock_uid": "0x00AABBCCDDEEFF00",
+  "ipad_name": "My iPad"
 }
 ```
 
