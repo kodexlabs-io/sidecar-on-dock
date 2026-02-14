@@ -49,8 +49,5 @@ format:
 	cargo fmt
 
 docs:
-	cargo doc --no-deps --target-dir docs-build
-	rm -rf docs
-	mv docs-build/doc docs
-	rm -rf docs-build
-	open docs/sidecar_on_dock/index.html
+	cargo doc --no-deps
+	open target/doc/sidecar_on_dock/index.html
