@@ -4,3 +4,14 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+block2 = "0.6.2"
+clap = { version = "4.5.58", features = ["derive"] }
+core-foundation = "0.10.1"
+core-foundation-sys = "0.8.7"
+env_logger = "0.11.9"
+log = "0.4.29"
+objc2 = "0.6.3"
+objc2-foundation = "0.3.2"
+plist = "1.8.0"
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.149"
