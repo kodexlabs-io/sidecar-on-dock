@@ -1,0 +1,43 @@
+version: 2
+
+updates:
+  - package-ecosystem: cargo
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: '00:00'
+      timezone: 'Europe/London'
+    assignees:
+      - dcrdev
+    commit-message:
+      prefix: fix
+      prefix-development: chore
+      include: scope
+    groups:
+      dev-dependencies:
+        dependency-type: development
+        patterns:
+          - '*'
+      dependencies:
+        dependency-type: production
+        patterns:
+          - '*'
+    labels:
+      - dependencies
+
+  - package-ecosystem: github-actions
+    directory: '.github/workflows'
+    schedule:
+      interval: weekly
+      day: monday
+      time: '00:00'
+      timezone: 'Europe/London'
+    assignees:
+      - dcrdev
+    commit-message:
+      prefix: fix
+      prefix-development: chore
+      include: scope
+    labels:
+      - dependencies
