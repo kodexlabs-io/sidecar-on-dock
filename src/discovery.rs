@@ -27,11 +27,14 @@ pub fn discover_thunderbolt_devices() -> Result<Vec<ThunderboltDevice>, String> 
         .map_err(|e| format!("Failed to run system_profiler: {e}"))?;
 
     if !output.status.success() {
-        return Err(format!("system_profiler exited with status {}", output.status));
+        return Err(format!(
+            "system_profiler exited with status {}",
+            output.status
+        ));
     }
 
-    let value: plist::Value = plist::from_bytes(&output.stdout)
-        .map_err(|e| format!("Failed to parse plist: {e}"))?;
+    let value: plist::Value =
+        plist::from_bytes(&output.stdout).map_err(|e| format!("Failed to parse plist: {e}"))?;
 
     let mut devices = Vec::new();
     extract_devices(&value, &mut devices);
@@ -105,21 +108,26 @@ pub fn print_discovery() -> Result<(), String> {
 
     if !tb_devices.is_empty() {
         println!("Hint: copy the UID of your dock into the config file.");
-        println!("Default config path: {}", crate::config::Config::default_path().display());
+        println!(
+            "Default config path: {}",
+            crate::config::Config::default_path().display()
+        );
     }
 
     Ok(())
 }
 
 fn extract_devices(value: &plist::Value, out: &mut Vec<ThunderboltDevice>) {
-    let Some(root_array) = value.as_array() else { return };
+    let Some(root_array) = value.as_array() else {
+        return;
+    };
 
     for entry in root_array {
-        if let Some(dict) = entry.as_dictionary() {
-            if let Some(items) = dict.get("_items").and_then(|v| v.as_array()) {
-                for item in items {
-                    extract_device_from_dict(item, out);
-                }
+        if let Some(dict) = entry.as_dictionary()
+            && let Some(items) = dict.get("_items").and_then(|v| v.as_array())
+        {
+            for item in items {
+                extract_device_from_dict(item, out);
             }
         }
     }
@@ -127,7 +135,9 @@ fn extract_devices(value: &plist::Value, out: &mut Vec<ThunderboltDevice>) {
 
 /// Extract non-Apple devices from a plist dict, recursing into nested `_items`.
 fn extract_device_from_dict(value: &plist::Value, out: &mut Vec<ThunderboltDevice>) {
-    let Some(dict) = value.as_dictionary() else { return };
+    let Some(dict) = value.as_dictionary() else {
+        return;
+    };
 
     let vendor = dict
         .get("vendor_name_key")

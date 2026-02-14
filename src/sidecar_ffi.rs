@@ -6,9 +6,9 @@
 use std::ffi::{c_char, c_int, c_void};
 
 use block2::StackBlock;
+use objc2::msg_send;
 use objc2::rc::Retained;
 use objc2::runtime::{AnyClass, AnyObject};
-use objc2::msg_send;
 use objc2_foundation::NSString;
 
 const SIDECAR_FRAMEWORK_PATH: &[u8] =
@@ -21,8 +21,7 @@ unsafe extern "C" {
 
 /// Load the SidecarCore private framework into the process.
 pub fn load_framework() -> Result<(), String> {
-    let handle =
-        unsafe { dlopen(SIDECAR_FRAMEWORK_PATH.as_ptr() as *const c_char, RTLD_LAZY) };
+    let handle = unsafe { dlopen(SIDECAR_FRAMEWORK_PATH.as_ptr() as *const c_char, RTLD_LAZY) };
     if handle.is_null() {
         Err("Failed to load SidecarCore.framework (dlopen returned null)".into())
     } else {
@@ -36,31 +35,49 @@ pub fn display_manager_class() -> Option<&'static AnyClass> {
 }
 
 /// `[SidecarDisplayManager sharedManager]`.
+///
+/// # Safety
+/// The caller must ensure `cls` is the `SidecarDisplayManager` ObjC class.
 pub unsafe fn shared_manager(cls: &AnyClass) -> Option<Retained<AnyObject>> {
     unsafe { msg_send![cls, sharedManager] }
 }
 
 /// `[manager devices]` returning an `NSArray<SidecarDevice>`.
+///
+/// # Safety
+/// The caller must ensure `manager` is a valid `SidecarDisplayManager` instance.
 pub unsafe fn devices(manager: &AnyObject) -> Option<Retained<AnyObject>> {
     unsafe { msg_send![manager, devices] }
 }
 
 /// `[device name]` returning an `NSString`.
+///
+/// # Safety
+/// The caller must ensure `device` is a valid `SidecarDevice` instance.
 pub unsafe fn device_name(device: &AnyObject) -> Option<Retained<NSString>> {
     unsafe { msg_send![device, name] }
 }
 
 /// `[array count]`.
+///
+/// # Safety
+/// The caller must ensure `array` is a valid `NSArray` instance.
 pub unsafe fn array_count(array: &AnyObject) -> usize {
     msg_send![array, count]
 }
 
 /// `[array objectAtIndex:index]`.
+///
+/// # Safety
+/// The caller must ensure `array` is a valid `NSArray` and `index` is within bounds.
 pub unsafe fn array_object_at(array: &AnyObject, index: usize) -> Option<Retained<AnyObject>> {
     unsafe { msg_send![array, objectAtIndex: index] }
 }
 
 /// `[manager connectToDevice:device completion:block]`.
+///
+/// # Safety
+/// The caller must ensure `manager` and `device` are valid ObjC instances.
 pub unsafe fn connect_to_device(manager: &AnyObject, device: &AnyObject) {
     let block = StackBlock::new(|error: *mut AnyObject| {
         if error.is_null() {
@@ -73,6 +90,9 @@ pub unsafe fn connect_to_device(manager: &AnyObject, device: &AnyObject) {
 }
 
 /// `[manager disconnectFromDevice:device completion:block]`.
+///
+/// # Safety
+/// The caller must ensure `manager` and `device` are valid ObjC instances.
 pub unsafe fn disconnect_from_device(manager: &AnyObject, device: &AnyObject) {
     let block = StackBlock::new(|error: *mut AnyObject| {
         if error.is_null() {

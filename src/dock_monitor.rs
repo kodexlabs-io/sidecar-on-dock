@@ -7,7 +7,7 @@ use std::cell::Cell;
 use std::ffi::{c_char, c_void};
 use std::ptr;
 
-use core_foundation::base::{kCFAllocatorDefault, TCFType};
+use core_foundation::base::{TCFType, kCFAllocatorDefault};
 use core_foundation::number::CFNumber;
 use core_foundation::string::CFString;
 use core_foundation_sys::base::CFRelease;
@@ -83,7 +83,10 @@ pub fn run(dock_uid: u64, ipad_name: Option<String>) -> ! {
         }
         drain_iterator(ctx, disconnect_iter, false);
 
-        log::info!("Monitoring for Thunderbolt dock UID 0x{:016X}. Entering run loop...", dock_uid);
+        log::info!(
+            "Monitoring for Thunderbolt dock UID 0x{:016X}. Entering run loop...",
+            dock_uid
+        );
         CFRunLoopRun();
     }
 
@@ -127,13 +130,18 @@ fn drain_iterator(ctx: &MonitorContext, iterator: io_iterator_t, connected: bool
                     sidecar::connect(ctx.ipad_name.as_deref());
                     ctx.sidecar_active.set(true);
                 } else {
-                    log::info!("Dock disconnected (UID 0x{:016X}). Stopping Sidecar...", uid);
+                    log::info!(
+                        "Dock disconnected (UID 0x{:016X}). Stopping Sidecar...",
+                        uid
+                    );
                     sidecar::disconnect(ctx.ipad_name.as_deref());
                     ctx.sidecar_active.set(false);
                 }
             }
         } else if !connected && ctx.sidecar_active.get() {
-            log::info!("Thunderbolt switch removed (UID unreadable). Disconnecting Sidecar as precaution.");
+            log::info!(
+                "Thunderbolt switch removed (UID unreadable). Disconnecting Sidecar as precaution."
+            );
             sidecar::disconnect(ctx.ipad_name.as_deref());
             ctx.sidecar_active.set(false);
         }
@@ -145,8 +153,10 @@ fn drain_iterator(ctx: &MonitorContext, iterator: io_iterator_t, connected: bool
 /// Read the `"UID"` property (SInt64) from an IORegistry entry.
 fn read_uid(service: io_service_t) -> Option<u64> {
     unsafe {
-        let mut props_ref: core_foundation_sys::dictionary::CFMutableDictionaryRef = ptr::null_mut();
-        let kr = IORegistryEntryCreateCFProperties(service, &mut props_ref, kCFAllocatorDefault as _, 0);
+        let mut props_ref: core_foundation_sys::dictionary::CFMutableDictionaryRef =
+            ptr::null_mut();
+        let kr =
+            IORegistryEntryCreateCFProperties(service, &mut props_ref, kCFAllocatorDefault as _, 0);
         if kr != KERN_SUCCESS || props_ref.is_null() {
             return None;
         }
@@ -157,7 +167,8 @@ fn read_uid(service: io_service_t) -> Option<u64> {
         let result = if raw_val.is_null() {
             None
         } else {
-            let number = CFNumber::wrap_under_get_rule(raw_val as core_foundation_sys::number::CFNumberRef);
+            let number =
+                CFNumber::wrap_under_get_rule(raw_val as core_foundation_sys::number::CFNumberRef);
             number.to_i64().map(|v| v as u64)
         };
 

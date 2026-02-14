@@ -54,7 +54,9 @@ pub fn connect(ipad_name: Option<&str>) {
         }
 
         match ipad_name {
-            Some(name) => log::warn!("Sidecar device '{name}' not found after {MAX_RETRIES} attempts"),
+            Some(name) => {
+                log::warn!("Sidecar device '{name}' not found after {MAX_RETRIES} attempts")
+            }
             None => log::warn!("No Sidecar devices available after {MAX_RETRIES} attempts"),
         }
     }
@@ -91,14 +93,16 @@ fn find_device(manager: &AnyObject, target_name: Option<&str>) -> Option<Retaine
         let normalised_target = target_name.map(normalise_quotes);
 
         for i in 0..count {
-            let Some(device) = sidecar_ffi::array_object_at(&array, i) else { continue };
+            let Some(device) = sidecar_ffi::array_object_at(&array, i) else {
+                continue;
+            };
 
             match normalised_target.as_deref() {
                 Some(target) => {
-                    if let Some(name) = sidecar_ffi::device_name(&device) {
-                        if normalise_quotes(&name.to_string()) == target {
-                            return Some(device);
-                        }
+                    if let Some(name) = sidecar_ffi::device_name(&device)
+                        && normalise_quotes(&name.to_string()) == target
+                    {
+                        return Some(device);
                     }
                 }
                 None => return Some(device),
@@ -111,9 +115,7 @@ fn find_device(manager: &AnyObject, target_name: Option<&str>) -> Option<Retaine
 
 /// Replace common Unicode quote variants with plain ASCII apostrophe.
 pub fn normalise_quotes(s: &str) -> String {
-    s.replace('\u{2019}', "'")
-     .replace('\u{2018}', "'")
-     .replace('\u{02BC}', "'")
+    s.replace(['\u{2019}', '\u{2018}', '\u{02BC}'], "'")
 }
 
 unsafe fn log_available_devices(manager: &AnyObject, target_name: Option<&str>) {
@@ -138,7 +140,10 @@ unsafe fn log_available_devices(manager: &AnyObject, target_name: Option<&str>) 
             }
             log::info!("Available Sidecar devices: {:?}", names);
             if let Some(target) = target_name {
-                log::info!("Looking for: {:?} (check config if name doesn't match)", target);
+                log::info!(
+                    "Looking for: {:?} (check config if name doesn't match)",
+                    target
+                );
             }
         }
     }

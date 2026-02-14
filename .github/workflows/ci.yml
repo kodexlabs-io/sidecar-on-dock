@@ -15,8 +15,9 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@master
         with:
+          toolchain: '1.93.1'
           components: clippy, rustfmt
       - uses: Swatinem/rust-cache@v2
       - name: Check formatting
@@ -29,7 +30,9 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: '1.93.1'
       - uses: Swatinem/rust-cache@v2
       - name: Run tests
         run: cargo test
@@ -40,7 +43,9 @@ jobs:
     needs: [lint, test]
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: '1.93.1'
       - uses: Swatinem/rust-cache@v2
       - name: Build release
         run: cargo build --release

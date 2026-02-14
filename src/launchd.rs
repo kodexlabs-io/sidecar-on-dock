@@ -81,7 +81,10 @@ pub fn uninstall() -> Result<(), String> {
     let path = plist_path();
 
     if !path.exists() {
-        println!("Nothing to uninstall (plist not found at {})", path.display());
+        println!(
+            "Nothing to uninstall (plist not found at {})",
+            path.display()
+        );
         return Ok(());
     }
 
@@ -90,8 +93,7 @@ pub fn uninstall() -> Result<(), String> {
         .arg(&path)
         .status();
 
-    fs::remove_file(&path)
-        .map_err(|e| format!("Failed to remove plist: {e}"))?;
+    fs::remove_file(&path).map_err(|e| format!("Failed to remove plist: {e}"))?;
 
     println!("Uninstalled: {}", path.display());
     Ok(())

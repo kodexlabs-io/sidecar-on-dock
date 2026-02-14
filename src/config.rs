@@ -47,8 +47,11 @@ impl Config {
 
     /// Parse `dock_uid` from its hex string representation to a `u64`.
     pub fn dock_uid_u64(&self) -> Result<u64, String> {
-        let s = self.dock_uid.trim().trim_start_matches("0x").trim_start_matches("0X");
-        u64::from_str_radix(s, 16)
-            .map_err(|e| format!("Invalid dock_uid '{}': {e}", self.dock_uid))
+        let s = self
+            .dock_uid
+            .trim()
+            .trim_start_matches("0x")
+            .trim_start_matches("0X");
+        u64::from_str_radix(s, 16).map_err(|e| format!("Invalid dock_uid '{}': {e}", self.dock_uid))
     }
 }

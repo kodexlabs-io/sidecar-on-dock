@@ -5,7 +5,10 @@ use std::path::PathBuf;
 use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
-#[command(version, about = "Monitor a Thunderbolt dock and automatically manage Sidecar display extension.")]
+#[command(
+    version,
+    about = "Monitor a Thunderbolt dock and automatically manage Sidecar display extension."
+)]
 struct Cli {
     #[command(subcommand)]
     command: Option<Command>,
@@ -60,7 +63,10 @@ fn cmd_run(config_path: Option<PathBuf>) {
         Ok(c) => c,
         Err(e) => {
             log::error!("{e}");
-            log::info!("Hint: run `sidecar-on-dock discover` to find your dock, then create {}", path.display());
+            log::info!(
+                "Hint: run `sidecar-on-dock discover` to find your dock, then create {}",
+                path.display()
+            );
             std::process::exit(1);
         }
     };
