@@ -10,6 +10,16 @@ Sidecar on Dock
 
 A lightweight daemon that monitors a Thunderbolt dock (specified by a unique hardware identifier in a JSON configuration file) and automatically manages display extension. When the dock is connected, your display will extend to an iPad via Sidecar; when disconnected, the extension is removed.
 
+> **Warning:** This project uses Apple's private `SidecarCore.framework`. Private APIs are undocumented, unsupported, and may break with any macOS update. Use at your own risk.
+
+## Tested On
+
+| Mac | Dock | iPad | macOS |
+|---|---|---|---|
+| MacBook Pro 14-inch (M4 Pro, 2024) | CalDigit TS3 Plus (Thunderbolt 3) | iPad Pro (M2, 2022) | macOS 26 Tahoe |
+
+Contributions with other hardware combinations are welcome.
+
 ## Requirements
 
 - macOS with Sidecar support
